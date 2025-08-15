@@ -1,4 +1,4 @@
-# Node modules
+# Node dependencies
 node_modules/
 
 # Build output
@@ -6,7 +6,7 @@ dist/
 out/
 build/
 
-# TypeScript cache
+# TypeScript build info
 *.tsbuildinfo
 
 # Logs
@@ -16,16 +16,27 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
-# OS files
+# OS / Editor files
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
+*.swp
 
 # Environment variables
 .env
 .env.local
 .env.*.local
 
-# IDE settings
-.vscode/
-.idea/
-*.swp
+# Temporary files
+tmp/
+temp/
+
+# Optional: Ignore package-lock.json if you don't want it in repo
+# package-lock.json
+
+# Optional: Ignore tsconfig.json if you don't want to push config
+# tsconfig.json
+
+# Optional: Ignore package.json if you only want pure code pushed (not common)
+# package.json
