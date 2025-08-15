@@ -18,7 +18,6 @@ export type JObject = { [key: string] : Jvalue }
 export type JArray = Jvalue[];
 
 
-
 export const isJvalue = (x: unknown): x is Jvalue => 
      typeof x === "string" || isJObject(x) || isJArray(x);
 
