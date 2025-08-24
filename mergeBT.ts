@@ -25,32 +25,16 @@ class TreeNode {
   }
 }
 
-function mergeTrees(t1: TreeNode | null, t2: TreeNode | null): TreeNode | null {
+function mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {
 
-  if(!t1 || !t2) return t1 || t2;
+  if(!root1 || !root2) return root1 || root2;
+    
+    root1.val += root2.val;
 
-  const stack: Array<[TreeNode | null, TreeNode | null]> = [[t1, t2]];
+    root1.left = mergeTrees(root1.left, root2.left);
+    root1.right = mergeTrees(root1.right, root2.right);
 
-  while(stack.length) {
-    const [n1, n2] = stack.pop()!;
-    if(!n1 || !n2) continue;
-    n1.val += n2.val;
- // left children
-    if (!n1.left) {
-      n1.left = n2.left;
-    } else {
-      stack.push([n1.left, n2.left]);
-    }
-
-    // right children
-    if (!n1.right) {
-      n1.right = n2.right;
-    } else {
-      stack.push([n1.right, n2.right]);
-    }
-  }
-
-  return t1;
+    return root1;
 }
 
 // ---------- Helpers to build and print trees ----------
