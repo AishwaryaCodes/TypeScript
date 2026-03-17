@@ -6,49 +6,74 @@
 //  - {"a": {"b": [{"c": "foo", "d": {}, "e": "bar"}]}} and ["a", "b", "c"] returns "foo"
 //  - {"a": {"b": [{"c": "foo", "d": {}, "e": "bar"},{"c": "baz"}]}} and ["a", "b", "c"] returns "foo" and "baz"
 
-type Jval = string | Jobj | Jarr;
 
-type Jobj = {[k:string]: Jval};
+type Jval = string | JObj | JArr;
 
-type Jarr = Jval[];
+type JObj = {[key: string]: Jval};
 
-
-const isObj = (x: unknown): x is Jobj => 
-    x !== null && typeof x === "object" && !Array.isArray(x);
-const isArr = Array.isArray;
+type JArr = Jval[];
 
 
-export function pathQuery(root: Jval, path: string[]): Jval[] {
-    let frontier: Jval[] = [root];
+class JsonPathQuery {
 
-    for(const key of path) {
-        const next: Jval[] = [];
+    private data: Jval;
 
-        for(const node of frontier) {
-            if (isObj(node)) {
-                if (Object.prototype.hasOwnProperty.call(node, key)) {
-                    next.push(node[key]);
+    constructor(data: Jval) {
+        this.data = data;
+    }
+
+    private static isObject(x: unknown): x is JObj {
+        return x !== null && typeof x === "object" && !Array.isArray(x);
+    }
+
+    private static isArray(x: unknown): x is JArr {
+        return Array.isArray(x);
+    }
+
+
+    query(path: string[]): Jval[] {
+
+        let frointer: Jval[] = [this.data];
+
+        for(const key of path) {
+            const next: Jval[] = [];
+
+            for(const node of frointer) {
+                if(JsonPathQuery.isObject(node)) {
+                    if(Object.prototype.hasOwnProperty.call(node,key)) {
+                        next.push(node[key]);
+                    }
                 }
-            }
-            else if(isArr(node)) {
+                else if (JsonPathQuery.isArray(node)) {
                     for(const el of node) {
-                        if(isObj(el) && Object.prototype.hasOwnProperty.call(el, key)){
+                        if (JsonPathQuery.isObject(el) && Object.prototype.hasOwnProperty.call(el, key)) {
                             next.push(el[key]);
                         }
                     }
                 }
-
             }
-            frontier = next;
+            frointer = next;
 
-            if(frontier.length === 0) break;
+            if(frointer.length === 0) break;
         }
 
-        return frontier;
+        return frointer;
     }
+}
+
+const data  = {
+  a: {
+    b: "hello",
+    c: "world"
+  },
+  b: {
+    d: "aish"
+  }
+};
 
 
-const data1 = {a: "foo"};
+const helper1  = new JsonPathQuery(data);
 
-console.log(pathQuery(data1, ["a"]));
+console.log(helper1.query(["a"]));
 
+console.log(helper1.query(["b"]));

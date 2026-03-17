@@ -1,4 +1,4 @@
-// What is inverted search? Implement Inverted search with following functionalities: insert(String doc) search(String term) delete(String doc) andSerach(String term1, String term2)
+// Inverted Document Instead of storing documents and scanning all of them every time, we build an inverted index.
 // Implement folllowing functions:
 //   insert(String doc)
 //   search(String term)
@@ -11,24 +11,27 @@ type DocId = number;
 
 class InvertedSearch {
 
-  private index: Map<string, Set<DocId>> = new Map();
+  // 3 - Maps 
+  private index: Map<string, Set<DocId>> = new Map(); // term -> set of document Ids:  hello -> {2}
 
-  private docs: Map<DocId, string> = new Map();
+  private docs: Map<DocId, string> = new Map(); // Id, Document Text: 1 -> "Hello world"
 
-  private contentToIds: Map<string, Set<DocId>> = new Map();
+  private contentToIds: Map<string, Set<DocId>> = new Map(); // Document Text , Id  "Hello world" -> {1}
+
 
   private nextId = 1;
 
-
-  private static tok(s: string): string[] {
-    return s.toLowerCase().split(/[^a-z0-9]+/i).filter(Boolean);
+  // tok function converts text into searchable words
+  private static tok(s: string): string[] {                       // "hello world"
+    return s.toLowerCase().split(/[^a-z0-9]+/i).filter(Boolean); // ["hello", "word"]
   }
    
 
+  // Insert Function - Add Document to Index
   insert(doc:string):number {
-  const id = this.nextId++;
+  const id = this.nextId++; // generate new docs ID
 
-  this.docs.set(id, doc);
+  this.docs.set(id, doc); // store document
 
   if(!this.contentToIds.has(doc)) this.contentToIds.set(doc, new Set());
   this.contentToIds.get(doc)!.add(id);
@@ -108,5 +111,5 @@ idx.insert("Node.js driver for MongoDB");
 console.log(idx.search("driver"));
 
 
-console.log(idx.delete("Node.js driver for MongoDB"));
-console.log(idx.search("driver"));
+//console.log(idx.delete("Node.js driver for MongoDB"));
+//console.log(idx.search("driver"));

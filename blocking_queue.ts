@@ -1,13 +1,23 @@
 //Implement a concurrent blocking queue
 
+// Producers add items to the queue
+// Consumers remove items from the queue
+
+// Two special behaviors exist:
+// If the queue is empty, consumers must wait until an item arrives.
+// If the queue is full, producers must wait until space becomes available.
+
+
 export class BlockingQueue<T> {
 
-    private buf: T[] = [];
+    // 3 structures
+    private buf: T[] = []; // item currently in queue
 
-    private takers: Array<(v: T) => void> = []; //waiting consumer
+    private takers: Array<(v: T) => void> = []; //waiting consumer for item
 
-    private putter: Array<{value: T; resolve: () => void}> = []; // waiting producer
+    private putter: Array<{value: T; resolve: () => void}> = []; // waiting producer for space
 
+    // capacity - Max Queue Size
     private readonly cap: number;
 
 
@@ -18,28 +28,37 @@ export class BlockingQueue<T> {
         this.cap = capacity;
     }
 
-
+    // return num of item in queue
     get size(): number {return this.buf.length;}
 
+
+    // function to add items in queue
     enqueue(value: T): Promise<void> {
         const taker = this.takers.shift();
+
+        // case 1 - consumer is waiting - exists
         if(taker) {
             taker(value);
             return Promise.resolve();
         }
 
+        // case 2 - Queue/bufer has space
         if(this.buf.length < this.cap) {
             this.buf.push(value);
             return Promise.resolve();
         }
 
+        // case 3 - Queue full
         return new Promise<void> (resolve => {
             this.putter.push({value, resolve});
         });
     }
 
+
     
     dequeue(): Promise<T> {
+
+        // case 1 - Queue has item
             if(this.buf.length > 0) {
                 const v = this.buf.shift() as T;
 

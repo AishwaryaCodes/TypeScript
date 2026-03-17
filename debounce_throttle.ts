@@ -1,23 +1,24 @@
 // Debounce/throttle a function - Control how often a function is invoked by noisy events.
 
-// We need a way to Limit how often Fun's runs
-// Debounce - Wait untill the user stops
-// Throttle - Run at most every X mili-sections
+// We need a way to Limit how often Fun's runs - when events happen too frequently.
 
-// leading - run at  the start of the window.
-// trailing - run at the end of the window. 
+// Debounce - Wait until the user stops triggering events, then run the function once.
+// Throttle - Run at most once every X mili-sections
 
 // timer - a setTimeout handle we use to delay work. 
 
 
 
+
+// leading - run at  the start of the window.
+// trailing - run at the end of the window. 
 export function debounce<T extends (...a: any[]) => any> (
     fn: T, wait: number, {leading = false, trailing = true} = {}
 ): (...a: Parameters<T>) => void {
 
     let timer: ReturnType<typeof setTimeout> | null = null;
 
-    let lastArgs: Parameters<T> | null = null, lastThis: any;
+    let lastArgs: Parameters<T> | null = null, lastThis: any; // stores latest arguments
 
     return function debounce(this: any, ...args: Parameters<T>) {
         lastArgs = args; 

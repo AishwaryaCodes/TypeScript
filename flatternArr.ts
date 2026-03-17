@@ -1,3 +1,7 @@
+// Given - List of Users - each user has multiple post
+// TOdo - Flatten nested data - flattening
+
+
 class Post {
   id: number;
   likes?: number;
@@ -10,7 +14,7 @@ class Post {
 
 class User {
   user: string;
-  posts: Post[]
+  posts: Post[];
 
   constructor(user: string, posts: Post[]) {
     this.user = user;
@@ -18,6 +22,7 @@ class User {
   }
 }
 
+// Output format
 class FlattenedPost {
   user: string;
   postId: number;
@@ -31,14 +36,14 @@ class FlattenedPost {
 }
 
 class PostFlattener {
+
   static flattenUserPosts(users: User[]): FlattenedPost[] {
+    const result: FlattenedPost[] = []; // result arr
 
-    const result: FlattenedPost[] = [];
-
-    for(const user of users) {
-      for(const post of user.posts) {
+    for(const user of users) { // for each user
+      for(const post of user.posts) { // for each post
         result.push(
-          new FlattenedPost(
+          new FlattenedPost( // create new flattened object 
             user.user,
             post.id
           )
@@ -48,9 +53,9 @@ class PostFlattener {
     return result;
   }
    
-  static flattenUserPostsWithLikes(users: User[]): FlattenedPost[] {
 
-    const res: FlattenedPost[] = [];
+  static flattenUserPostsWithLikes(users: User[]): FlattenedPost[] {
+    const res: FlattenedPost[] = []; // result arr
 
     for(const user of users) {
       for(const post of user.posts) {
@@ -63,10 +68,10 @@ class PostFlattener {
         )
       }
     }
-
     return res;
-
   }
+
+
 }
 
 

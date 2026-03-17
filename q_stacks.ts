@@ -2,30 +2,31 @@
 
 export class Queue<T> {
 
-    private inStack: T[] = [];
+    private inStack: T[] = []; // enqueue
 
-    private outStack: T[] = [];
+    private outStack: T[] = []; // dequeue
 
 
     enqueue(item: T): void {
-        this.inStack.push(item);
+        this.inStack.push(item); // just put in stack
     }
 
     dequeue(): T | undefined {
-        if(this.outStack.length === 0) {
+        if(this.outStack.length === 0) { // if outstack is empty 
             while(this.inStack.length > 0) {
-                this.outStack.push(this.inStack.pop()!);
-            }
+                this.outStack.push(this.inStack.pop()!); // move everything from inStack ->>> outStack
+            } // this reverses order - to maintain FIFO ORDER
+            // and then pop 
         }
 
-        return this.outStack.pop();
+        return this.outStack.pop(); // Correct FIFO ORDER
     }
 
-    
+     
     peek(): T | undefined {
         if(this.outStack.length === 0) {
             while(this.inStack.length > 0) {
-                this.outStack.push(this.inStack.pop()!);
+                this.outStack.push(this.inStack.pop()!); // just return , dont remove
             }
         }
 
@@ -34,12 +35,12 @@ export class Queue<T> {
 
 
     size(): number {
-        return this.inStack.length + this.outStack.length;
+        return this.inStack.length + this.outStack.length; // total elemnts 
     }
 
 
     isEmpty(): boolean {
-        return this.size() === 0;
+        return this.size() === 0; 
     }
 
 }
